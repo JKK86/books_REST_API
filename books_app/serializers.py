@@ -32,3 +32,13 @@ class BookSerializer(serializers.ModelSerializer):
                 book.categories.add(category)
         book.save()
         return book
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    model = Author
+    fields = ("id", "name")
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    model = Category
+    fields = ("id", "name")
