@@ -1,1 +1,1 @@
-web: gunicorn book_REST_API.wsgi:application --log-file -
+web: gunicorn books_REST_API.wsgi --log-file -
