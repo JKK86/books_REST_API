@@ -21,7 +21,6 @@ from books_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('books/', views.BooksListView.as_view(), name="book_list"),
-    path('', views.BooksListView.as_view(), name="book_list"),
     path('books/<int:pk>/', views.BookView.as_view(), name="book_detail"),
     path('db/', views.UploadBooksView.as_view(), name="upload_books"),
 ]
