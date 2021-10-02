@@ -16,13 +16,13 @@ class Category(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, null=True)
     authors = models.ManyToManyField(Author, related_name="books_written")
-    published_date = models.SmallIntegerField()
+    published_date = models.CharField(max_length=12, null=True)
     categories = models.ManyToManyField(Category, related_name="books")
-    average_rating = models.SmallIntegerField()
-    ratings_count = models.SmallIntegerField()
-    thumbnail = models.URLField()
+    average_rating = models.SmallIntegerField(null=True)
+    ratings_count = models.SmallIntegerField(null=True)
+    thumbnail = models.URLField(null=True)
 
     def __str__(self):
         return self.title
