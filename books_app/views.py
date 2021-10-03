@@ -3,12 +3,11 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from books_app.models import Book
+from books_app.models import Book, Author, Category
 from books_app.serializers import BookSerializer, AuthorSerializer, CategorySerializer
 
 
 class BooksListView(generics.ListCreateAPIView):
-    # queryset = Book.objects.all()
     serializer_class = BookSerializer
 
     def get_queryset(self):
@@ -39,26 +38,19 @@ class UploadBooksView(APIView):
         else:
             return Response({'error': "Request failed"}, status=res.status_code)
 
-    def clean_db(self):
-        Book.objects.all().delete()
-
     def post(self, request):
-        self.clean_db()
         data = self.get_items()
         for book in data:
             info = book['volumeInfo']
-            print(info)
             serializer = BookSerializer(data={
                 'title': info.get('title', None),
-                'authors': info.get('authors', []),
+                'authors': [{'name': author} for author in info.get('authors', [])],
                 'published_date': info.get('publishedDate', None),
-                'categories': info.get('categories', []),
+                'categories': [{'name': category} for category in info.get('categories', [])],
                 'average_rating': info.get('averageRating', None),
                 'ratings_count': info.get('ratingsCount', None),
                 'thumbnail': info['imageLinks'].get('thumbnail'),
             })
-            print(serializer)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
         return Response('Created successfully', status=status.HTTP_201_CREATED)
-
