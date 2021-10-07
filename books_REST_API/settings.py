@@ -20,7 +20,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-d^scq*1b&l0)088rdlw-j4hirx(xj)6d6v8c6*_r4cy*ffokw!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -136,3 +135,11 @@ if os.environ.get('DEBUG') == 'TRUE':
     DEBUG = True
 elif os.environ.get('DEBUG') == 'FALSE':
     DEBUG = False
+
+if not os.environ.get('SECRET_KEY'):
+    try:
+        from books_REST_API.local_settings import SECRET_KEY
+    except ModuleNotFoundError:
+        print("Brak konfiguracji secret_key w pliku local_settings.py!")
+        print("Uzupełnij dane i spróbuj ponownie!")
+        exit(0)

@@ -7,7 +7,7 @@ from books_app.models import Book, Author, Category
 from books_app.serializers import BookSerializer, AuthorSerializer, CategorySerializer
 
 
-class BooksListView(generics.ListCreateAPIView):
+class BooksListView(generics.ListAPIView):
     serializer_class = BookSerializer
 
     def get_queryset(self):
@@ -30,8 +30,8 @@ class BookView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UploadBooksView(APIView):
-    def get_items(self):
-        res = requests.get("https://www.googleapis.com/books/v1/volumes", params={'q': 'war'})
+    def get_items(self, query):
+        res = requests.get("https://www.googleapis.com/books/v1/volumes", params={'q': query})
         if res.status_code == 200:
             data = res.json()
             return data['items']
@@ -39,7 +39,8 @@ class UploadBooksView(APIView):
             return Response({'error': "Request failed"}, status=res.status_code)
 
     def post(self, request):
-        data = self.get_items()
+        query = request.POST['q']
+        data = self.get_items(query)
         for book in data:
             info = book['volumeInfo']
             serializer = BookSerializer(data={
