@@ -39,7 +39,8 @@ class UploadBooksView(APIView):
             return Response({'error': "Request failed"}, status=res.status_code)
 
     def post(self, request):
-        query = request.POST['q']
+        query = request.data.get('q', 'war')
+        print(query)
         data = self.get_items(query)
         for book in data:
             info = book['volumeInfo']
